@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajout nouvelle tache</title>
+</head>
+<body>
+    <h1>Ajout nouvelle tache</h1>
+    <a href="{{ url_for('taches') }}">Maintenance taches</a>
+    <br>
+    <form method="POST" action="{{ url_for('add_tache') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.libelle_tache.label }}<br>
+            {{ form.libelle_tache(size=32) }}<br>
+            {% for error in form.libelle_tache.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.coefficient.label }}<br>
+            {{ form.coefficient(size=32) }}<br>
+            {% for error in form.coefficient.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.remarques.label }}<br>
+            {{ form.remarques(size=32) }}<br>
+            {% for error in form.remarques.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+</html>

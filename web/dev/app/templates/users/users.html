@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gestion users</title>
+    <style>
+        table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        th,td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+        th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+        tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+        tr:hover {
+                    background-color: #ddd;
+                }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('index') }}">menu principale</a>
+    <h1>maintenance users</h1>
+    <a href="{{ url_for('add_user') }}">ajout nouvelle user</a>
+    <br><br>
+    <h2>Search users</h2>
+    <form method="POST" action="{{ url_for('users') }}">
+        {{ search_form.hidden_tag() }}
+
+        {{ search_form.nom.label }}<br>
+        {{ search_form.nom(size=32) }}<br>
+        {% for error in search_form.nom.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.age.label }}<br>
+        {{ search_form.age }}<br>
+        {% for error in search_form.age.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.email.label }}<br>
+        {{ search_form.email }}<br>
+        {% for error in search_form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.id_f_user.label }}<br>
+        {{ search_form.id_f_user }}<br>
+        {% for error in search_form.id_f_user.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        <p>{{ search_form.submit() }}</p>
+    </form>
+    <a href="{{ url_for('users') }}">liste</a>
+    <a href="{{ url_for('download_csv_users') }}">svc</a>
+    <a href="{{ url_for('download_html_users') }}">html</a>
+    <table>
+        <tr>
+            <th>nom</th>
+            <th>age</th>
+            <th>email</th>
+            <th>famille</th>
+            <th>acction</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.nom }}</td>
+            <td>{{ user.age }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ libelle_famille(user.id_f_user) }}</td>
+            <td><a href="">impr</a> | <a href="{{ url_for('edit_user', id=user.id_users) }}">modifier</a> | <a href="{{ url_for('delete_user', id=user.id_users) }}">supprimer</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

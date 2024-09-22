@@ -1,0 +1,86 @@
+<!DOCTYPEhtml>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <style>
+        table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        th,td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+        th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+        tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+        tr:hover {
+                    background-color: #ddd;
+                }
+    </style>
+    <script>
+        function addLine() {
+        var table = document.getElementById('det-taches-table');
+        var rowCount = table.rows.length;
+        var newRow = table.insertRow(rowCount);
+        
+        var cellCount = table.rows[0].cells.length;
+        for (var i = 0; i < cellCount; i++) {
+        var newCell = newRow.insertCell(i);
+        var cellContent = table.rows[1].cells[i].innerHTML;
+        var newContent = cellContent.replace(/det_taches-\d+/g, 'det_taches-' + (rowCount - 1));
+                    newContent = newContent.replace(/det_taches\[\d+\]/g, 'det_taches[' + (rowCount - 1) + ']');
+                    newCell.innerHTML = newContent;
+                }
+            }
+    </script>
+</head>
+<body>
+    <h1>Task Management</h1>
+
+    <a href="{{ url_for('h_taches') }}">maintenance historique tache</a>
+
+    <form method="POST" action="{{ url_for('add_h_taches') }}">
+        {{ form.hidden_tag() }}
+
+        <h2>Task Header</h2>
+        {{ form.ent_tache.libelle_journee.label }} {{ form.ent_tache.libelle_journee(size=32) }}<br>
+        {{ form.ent_tache.users.label }} {{ form.ent_tache.users }}<br>
+        {{ form.ent_tache.date_operation.label }} {{ form.ent_tache.date_operation() }}<br>
+        {{ form.ent_tache.remarques.label }} {{ form.ent_tache.remarques(size=32) }}<br>
+
+        <h2>Task Details</h2>
+            <table id="det-taches-table">
+                <tr>
+                    <th>{{ form.det_taches.0.id_tache.label }}</th>
+                    <th>{{ form.det_taches.0.h_debut.label }}</th>
+                    <th>{{ form.det_taches.0.h_fin.label }}</th>
+                    <th>{{ form.det_taches.0.temps_diff.label }}</th>
+                    <th>{{ form.det_taches.0.coefficient.label }}</th>
+                    <th>{{ form.det_taches.0.prix_calc.label }}</th>
+                    <th>{{ form.det_taches.0.remarques.label }}</th>
+                </tr>
+                {% for subform in form.det_taches %}
+                <tr>
+                    <td>{{ subform.id_tache() }}</td>
+                    <td>{{ subform.h_debut() }}</td>
+                    <td>{{ subform.h_fin() }}</td>
+                    <td>{{ subform.temps_diff(size=32) }}</td>
+                    <td>{{ subform.coefficient(size=32) }}</td>
+                    <td>{{ subform.prix_calc(size=32) }}</td>
+                    <td>{{ subform.remarques(size=32) }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        <button type="button" onclick="addLine()">Add Line</button><br><br>
+
+        {{ form.submit() }}
+    </form>
+</body>
+</html>

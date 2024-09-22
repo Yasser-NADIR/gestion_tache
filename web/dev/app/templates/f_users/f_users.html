@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gestion famille users</title>
+    <style>
+        table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        th,td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+        th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+        tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+        tr:hover {
+                    background-color: #ddd;
+                }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('index') }}">menu principale</a>
+    <h1>maintenance famille users</h1>
+    <a href="{{ url_for('add_f_user') }}">ajout nouvelle famille</a>
+    <br><br>
+    
+    <h2>Search famille users</h2>
+    <form method="POST" action="{{ url_for('f_users') }}">
+        {{ search_form.hidden_tag() }}
+
+        {{ search_form.libelle_famille.label }}<br>
+        {{ search_form.libelle_famille(size=32) }}<br>
+        {% for error in search_form.libelle_famille.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.coefficient.label }}<br>
+        {{ search_form.coefficient(size=32) }}<br>
+        {% for error in search_form.coefficient.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.remarques.label }}<br>
+        {{ search_form.remarques(size=32) }}<br>
+        {% for error in search_form.remarques.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        <p>{{ search_form.submit() }}</p>
+    </form>
+    <a href="{{ url_for('f_users') }}">liste</a>
+    <a href="{{ url_for('download_csv_f_users') }}">svc</a>
+    <a href="{{ url_for('download_html_f_users') }}">html</a>
+    <table>
+        <tr>
+            <th>labelle famille</th>
+            <th>coefficient</th>
+            <th>remarque</th>
+            <th>action</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.libelle_famille }}</td>
+            <td>{{ user.coefficient }}</td>
+            <td>{{ user.remarques }}</td>
+            <td><a href="">impr</a> | <a href="{{ url_for('edit_f_user', id=user.id_f_user) }}">modifier</a> | <a href="{{ url_for('delete_f_user', id=user.id_f_user) }}">supprimer</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

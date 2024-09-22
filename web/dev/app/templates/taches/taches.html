@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gestion des taches</title>
+    <style>
+        table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        th,td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+        th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+        tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+        tr:hover {
+                    background-color: #ddd;
+                }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('index') }}">menu principale</a>
+    <h1>maintenance des taches</h1>
+    <a href="{{ url_for('add_tache') }}">Ajout nouvelle tache</a>
+    <br><br>
+    
+    <h2>Search tache users</h2>
+    <form method="POST" action="{{ url_for('taches') }}">
+        {{ search_form.hidden_tag() }}
+
+        {{ search_form.libelle_tache.label }}<br>
+        {{ search_form.libelle_tache(size=32) }}<br>
+        {% for error in search_form.libelle_tache.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.coefficient.label }}<br>
+        {{ search_form.coefficient(size=32) }}<br>
+        {% for error in search_form.coefficient.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.remarques.label }}<br>
+        {{ search_form.remarques(size=32) }}<br>
+        {% for error in search_form.remarques.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        <p>{{ search_form.submit() }}</p>
+    </form>
+    <form action="">
+
+    </form>
+    <a href="{{ url_for('taches') }}">liste</a>
+    <a href="{{ url_for('download_csv_tache') }}">csv</a>
+    <a href="{{ url_for('download_html_tache') }}">html</a>
+    <table>
+        <tr>
+            <th>labelle tache</th>
+            <th>coefficient</th>
+            <th>remarque</th>
+            <th>action</th>
+        </tr>
+        {% for tache in taches %}
+        <tr>
+            <td>{{ tache.libelle_tache }}</td>
+            <td>{{ tache.coefficient }}</td>
+            <td>{{ tache.remarques }}</td>
+            <td><a href="">impr</a> | <a href="{{ url_for('edit_tache', id=tache.id_tache) }}">modifier</a> | <a href="{{ url_for('delete_tache', id=tache.id_tache) }}">supprimer</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

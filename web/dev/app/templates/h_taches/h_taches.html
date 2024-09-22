@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gestion historiques taches</title>
+    <style>
+        table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        th,td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+        th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+        tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+        tr:hover {
+                    background-color: #ddd;
+                }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('index') }}">menu principale</a>
+    <p>historique taches</p>
+    <a href="{{ url_for('add_h_taches') }}">Gestion quotidienne des taches</a>
+    <br><br>
+
+    <h2>Search historique des taches</h2>
+    <form method="POST" action="{{ url_for('h_taches') }}">
+        {{ search_form.hidden_tag() }}
+
+        {{ search_form.libelle_journee.label }}<br>
+        {{ search_form.libelle_journee(size=32) }}<br>
+        {% for error in search_form.libelle_journee.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.users.label }}<br>
+        {{ search_form.users }}<br>
+        {% for error in search_form.users.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.date_operation.label }}<br>
+        {{ search_form.date_operation(size=32) }}<br>
+        {% for error in search_form.date_operation.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ search_form.remarques.label }}<br>
+        {{ search_form.remarques(size=32) }}<br>
+        {% for error in search_form.remarques.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        <p>{{ search_form.submit() }}</p>
+    </form>
+    <a href="">liste</a>
+    <a href="">svc</a>
+    <a href="">html</a>
+    <table>
+        <tr>
+            <th>Libelle Journee</th>
+            <th>Date d'Operation</th>
+            <th>Remarque</th>
+            <th>Nom</th>
+            <th>Nbr</th>
+            <th>Action</th>
+        </tr>
+        {% for h_ent_tache in h_ent_taches %}
+        <tr>
+            <td>{{ h_ent_tache.libelle_journee }}</td>
+            <td>{{ h_ent_tache.date_operation }}</td>
+            <td>{{ h_ent_tache.remarques }}</td>
+            <td>{{ nom_user(h_ent_tache.id_users) }}</td>
+            <td>{{ num_tache(h_ent_tache.id_h_ent_tache) }}</td>
+            <td><a href="">impr</a> | <a href="{{ url_for('edit_h_taches', id_h_ent_tache=h_ent_tache.id_h_ent_tache) }}">modifier</a> | <a href="{{ url_for('delete_h_taches', id_h_ent_tache=h_ent_tache.id_h_ent_tache) }}">supprimer</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
