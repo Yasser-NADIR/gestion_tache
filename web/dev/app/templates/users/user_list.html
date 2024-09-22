@@ -1,0 +1,53 @@
+<!DOCTYPEhtml>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <style>
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    th,td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+    th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+    tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>User List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Age</th>
+                <th>Email</th>
+                <th>Famille</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id_users }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ libelle_famille(user.id_f_user) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

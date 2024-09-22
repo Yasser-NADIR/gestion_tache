@@ -1,0 +1,51 @@
+<!DOCTYPEhtml>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Famille user List</title>
+    <style>
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    th,td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+    th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+    tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>User List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Libelle Famille</th>
+                <th>Coefficient</th>
+                <th>Remarques</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id_f_user }}</td>
+                <td>{{ user.libelle_famille }}</td>
+                <td>{{ user.coefficient }}</td>
+                <td>{{ user.remarques }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

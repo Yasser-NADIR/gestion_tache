@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>modifier famille user</title>
+</head>
+<body>
+    <h1>modifier famille user</h1>
+    <a href="{{ url_for('f_users') }}">Maintenance famille users</a>
+    <br>
+    <form method="POST" action="{{ url_for('edit_f_user', id=user.id_f_user) }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.libelle_famille.label }}<br>
+            {{ form.libelle_famille(size=32) }}<br>
+            {% for error in form.libelle_famille.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.coefficient.label }}<br>
+            {{ form.coefficient(size=32) }}<br>
+            {% for error in form.coefficient.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.remarques.label }}<br>
+            {{ form.remarques(size=32) }}<br>
+            {% for error in form.remarques.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</body>
+</html>

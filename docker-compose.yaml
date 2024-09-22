@@ -1,0 +1,17 @@
+services:
+
+  db:
+    build: db/.
+
+  web:
+    build: web/.
+    ports:
+      - "8081:5000"
+    restart: always
+    develop:
+      watch:
+        - path: ./web/dev/.
+          action: sync+restart
+          target: /app
+        - path: ./web/requirements.txt
+          action: rebuild

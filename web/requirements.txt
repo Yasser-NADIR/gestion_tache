@@ -1,0 +1,7 @@
+flask
+Flask-WTF
+flask-sqlalchemy
+flask-security
+mariadb
+reportlab
+xhtml2pdf

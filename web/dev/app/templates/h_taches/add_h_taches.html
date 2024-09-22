@@ -1,0 +1,191 @@
+<!DOCTYPEhtml>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <style>
+        table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        th,td {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+        th {
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+        tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+        tr:hover {
+                    background-color: #ddd;
+                }
+    </style>
+    <script>
+        function addLine() {
+            var table = document.getElementById('det-taches-table');
+            var rowCount = table.rows.length;
+            var newRow = table.insertRow(rowCount);
+
+            {% for field in line %}
+                {% if field.name not in ['id_h_l_ent_tache', 'csrf_token'] %}
+                    var cell = newRow.insertCell()
+                    cell.innerHTML = '{{field}}'
+                    var child = cell.firstChild
+                    child.setAttribute('name', 'det_taches-'+(rowCount - 1)+'-{{field.name}}')
+                {% endif %}
+            {% endfor %}
+
+            const startTimeField = newRow.querySelector('.h_debut');
+            const endTimeField = newRow.querySelector('.h_fin');
+            if (startTimeField && endTimeField) {
+                startTimeField.addEventListener('change', () =>updateTimeDifference(newRow));
+                endTimeField.addEventListener('change', () =>updateTimeDifference(newRow));
+                startTimeField.addEventListener('change', () =>updatePrix(newRow));
+                endTimeField.addEventListener('change', () =>updatePrix(newRow));
+            }
+
+            const taskSelect = newRow.querySelector('.id_tache');
+            if (taskSelect) {
+                taskSelect.addEventListener('change', () => updateCoefficient(newRow));
+                taskSelect.addEventListener('change', () => updatePrix(newRow));
+            }
+
+            const tempsDiff = newRow.querySelector('.temps_diff');
+            const coefficientInput = newRow.querySelector('.coefficient');
+            if(tempsDiff && coefficientInput){
+                tempsDiff.addEventListener('change', () => updatePrix(newRow));
+                coefficientInput.addEventListener('change', () => updatePrix(newRow));
+            }  
+        }
+
+        function deleteLine(button) {
+            console.log('test click')
+            const row = button.closest('tr');
+            console.log(row.rowIndex)
+            const table = document.getElementById('det-taches-table');
+            if (row.rowIndex >= 1) {
+                table.deleteRow(row.rowIndex);
+            }
+        }
+
+        function calculateTimeDifference(startTime, endTime) {
+            const start = new Date(`1970-01-01T${startTime}:00`);
+            const end = new Date(`1970-01-01T${endTime}:00`);
+            const diff = end - start;
+            const diffMinutes = Math.floor((diff / (1000 * 60)));
+            if(diffMinutes<0) return '0';
+            return `${diffMinutes}`;
+        }
+
+        function updateTimeDifference(row) {
+            const startTime = row.querySelector('.h_debut').value;
+            const endTime = row.querySelector('.h_fin').value;
+            const diffField = row.querySelector('.temps_diff');
+
+            if (startTime && endTime) {
+                diffField.value = calculateTimeDifference(startTime, endTime);
+            }else {
+                diffField.value = '';
+            }
+        }
+
+        function updateCoefficient(row) {
+            const taskSelect = row.querySelector('.id_tache');
+            const coefficientInput = row.querySelector('.coefficient');
+            var coefTache = {{coef_tache|tojson}};
+            
+            
+            if (taskSelect && coefficientInput) {
+                const selectedTask = taskSelect.value;
+                const coefficient = coefTache[selectedTask] || '';
+                coefficientInput.value = coefTache[selectedTask];
+            }
+        }
+
+        function updatePrix(row){
+            console.log('changed')
+            const tempsDiff = row.querySelector('.temps_diff');
+            const coefficientInput = row.querySelector('.coefficient');
+            const prixCalc = row.querySelector('.prix_calc');
+
+            if(tempsDiff && coefficientInput && prixCalc){
+                prixCalc.value = Math.floor(coefficientInput.value / 60 * tempsDiff.value)
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('#det-taches-table tr');
+            rows.forEach(row => {
+                const startTimeField = row.querySelector('.h_debut');
+                const endTimeField = row.querySelector('.h_fin');
+                const taskSelect = row.querySelector('.id_tache');
+                const tempsDiff = row.querySelector('.temps_diff');
+                const coefficientInput = row.querySelector('.coefficient');
+
+                if (startTimeField && endTimeField) {
+                    startTimeField.addEventListener('change', () => updateTimeDifference(row));
+                    endTimeField.addEventListener('change', () => updateTimeDifference(row));
+                    startTimeField.addEventListener('change', () => updatePrix(row));
+                    endTimeField.addEventListener('change', () => updatePrix(row));
+                }
+                if (taskSelect) {
+                    taskSelect.addEventListener('change', () => updateCoefficient(row));
+                    taskSelect.addEventListener('change', () => updatePrix(row));
+                }
+                if(tempsDiff && coefficientInput){
+                    tempsDiff.addEventListener('change', () => updatePrix(row));
+                    coefficientInput.addEventListener('change', () => updatePrix(row));
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Task Management</h1>
+
+    <a href="{{ url_for('h_taches') }}">maintenance historique tache</a>
+
+    <form method="POST" action="{{ url_for('add_h_taches') }}">
+        {{ form.hidden_tag() }}
+
+        <h2>Task Header</h2>
+        {{ form.ent_tache.libelle_journee.label }} {{ form.ent_tache.libelle_journee(size=32) }}<br>
+        {{ form.ent_tache.users.label }} {{ form.ent_tache.users }}<br>
+        {{ form.ent_tache.date_operation.label }} {{ form.ent_tache.date_operation() }}<br>
+        {{ form.ent_tache.remarques.label }} {{ form.ent_tache.remarques(size=32) }}<br>
+
+        <h2>Task Details</h2>
+            <table id="det-taches-table">
+                <tr>
+                    <th>{{ form.det_taches.0.id_tache.label }}</th>
+                    <th>{{ form.det_taches.0.h_debut.label }}</th>
+                    <th>{{ form.det_taches.0.h_fin.label }}</th>
+                    <th>{{ form.det_taches.0.temps_diff.label }}</th>
+                    <th>{{ form.det_taches.0.coefficient.label }}</th>
+                    <th>{{ form.det_taches.0.prix_calc.label }}</th>
+                    <th>{{ form.det_taches.0.remarques.label }}</th>
+                    <th> Action </th>
+                </tr>
+                {% for subform in form.det_taches %}
+                <tr>
+                    <td>{{ subform.id_tache() }}</td>
+                    <td>{{ subform.h_debut() }}</td>
+                    <td>{{ subform.h_fin() }}</td>
+                    <td>{{ subform.temps_diff(size=32) }}</td>
+                    <td>{{ subform.coefficient() }}</td>
+                    <td>{{ subform.prix_calc(size=32) }}</td>
+                    <td>{{ subform.remarques(size=32) }}</td>
+                    <td><button type="button" onclick="deleteLine(this)">Delete</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        <button type="button" onclick="addLine()">Add Line</button><br><br>
+
+        {{ form.submit() }}
+    </form>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPEhtml>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .logo {
+                max-width: 150px;
+                height: auto;
+            }
+
+            h1 {
+                color: #2c3e50;
+                border-bottom: 2px solid #3498db;
+                padding-bottom: 10px;
+            }
+
+            .info-container {
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .info-item {
+                margin-bottom: 15px;
+            }
+
+            .info-label {
+                font-weight: bold;
+                color: #2c3e50;
+            }
+
+            .info-value {
+                margin-left: 10px;
+            }
+
+            .footer {
+                text-align: center;
+                margin-top: 30px;
+                font-size: 0.9em;
+                color: #777;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <img src="" alt="Company Logo" class="logo">
+            <h1>User Num: {{ user.id_users }}</h1>
+        </div>
+
+        <div class="info-container">
+            <div class="info-item">
+                <span class="info-label">User code:</span>
+                <span class="info-value">{{ user.id_users }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value">{{ user.nom }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Age:</span>
+                <span class="info-value">{{ user.age }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ user.email }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Family User:</span>
+                <span class="info-value">{{ labelle_famille(user.id_f_user) }}</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Generated on {{ current_date }} | Your Company Name</p>
+        </div>
+    </body>
+
+    </html>
